@@ -25,6 +25,24 @@ Unofficial redesign &amp; frontend implementation of the I-CAD platform (French 
 - FAQ page
 - Responsive design following I-CAD's visual identity
 
+## Preview
+
+### Landing Page
+
+![Landing](./screenshots/landing.gif)
+
+### Dashboard
+
+![Dashboard](./screenshots/dashboard.gif)
+
+### Carte d'identification
+
+![Carte](./screenshots/dashboard2.gif)
+
+### My profile & FAQ
+
+![Carte](./screenshots/dashboard3.gif)
+
 # icad-portfolio
 
 This template should help get you started developing with Vue 3 in Vite.
