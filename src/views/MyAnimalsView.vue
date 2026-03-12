@@ -7,8 +7,6 @@
 
   <!-- Animals -->
   <div v-else>
-    {{ animalStore.animals?.length > 0 ? 'ok' : 'no' }}
-
     <div v-for="animal in animalStore.animals" :key="animal.identificationNumber" class="animal">
       <animal-card
         :name="animal.name"
