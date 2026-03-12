@@ -1,13 +1,13 @@
 <template>
   <div :key="name" class="animal-item">
-    <div class="animal-avatar">{{ emoji }}</div>
+    <div class="animal-avatar">🐈</div>
     <div class="animal-info">
       <div class="animal-name">{{ name }}</div>
       <div class="animal-meta">{{ meta }}</div>
     </div>
     <span class="animal-id">{{ id }}</span>
-    <span class="chip" :class="chipClass">
-      <v-icon size="11">{{ chipIcon }}</v-icon>
+    <span class="chip chip-green">
+      <v-icon size="11">mdi-check-circle</v-icon>
       {{ status }}
     </span>
   </div>
@@ -15,12 +15,12 @@
 <script setup lang="ts">
 defineProps<{
   name: string
-  emoji: string
+  // emoji: string
   meta: string
   id: string
   status: string
-  chipClass: string
-  chipIcon: string
+  // chipClass: string
+  // chipIcon: string
 }>()
 </script>
 <style scoped>

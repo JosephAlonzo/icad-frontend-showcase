@@ -4,24 +4,42 @@
       <div class="login-card">
         <div class="login-title">ACCÉDER À MON ESPACE {{ profile.toUpperCase() }}</div>
 
-        <div class="field-label">
-          Numéro d'identification
-          <v-icon size="16" class="ml-1">mdi-information-outline</v-icon>
-        </div>
+        <div class="field-label">Email</div>
         <v-text-field
-          v-model="identification"
-          placeholder="Numéro d'insert/puce ou tatouage"
+          v-model="email"
+          placeholder="votre@email.fr"
           variant="outlined"
           density="comfortable"
           clearable
-          class="mb-4"
+          :error-messages="errors.email"
         />
 
-        <v-btn color="primary" block class="continuer-btn" elevation="0" @click="login">
+        <div class="field-label">Mot de passe</div>
+        <v-text-field
+          v-model="password"
+          placeholder="••••••••"
+          type="password"
+          variant="outlined"
+          density="comfortable"
+          clearable
+          :error-messages="errors.password"
+        />
+        <v-btn
+          color="primary"
+          block
+          class="continuer-btn"
+          elevation="0"
+          @click="login"
+          :loading="loading"
+        >
           CONTINUER
         </v-btn>
 
-        <div class="no-number">Je n'ai pas ce numéro</div>
+        <v-alert v-if="errors.global" type="error" density="compact">
+          {{ errors.global }}
+        </v-alert>
+
+        <div class="no-number">Mot de passe oublié ?</div>
       </div>
       <div class="img">
         <img src="@/assets/espace-detenteur.png" alt="space-detenteur" width="100%" />
@@ -31,9 +49,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
+
 const emits = defineEmits(['update:dialog'])
 const props = defineProps<{ dialog: boolean; profile: string }>()
 const authStore = useAuthStore()
@@ -44,17 +63,44 @@ const dialog = computed({
   set: (value: boolean) => emits('update:dialog', value),
 })
 
+const email = ref('pierre@icad.fr')
+const password = ref('Password123!')
+const loading = ref(false)
+const errors = reactive({
+  email: '',
+  password: '',
+  global: '',
+})
+
 async function login() {
-  //const data = await authService.login(identification.value)
-  const data = { name: props.profile, token: 'fake-jwt-token' } // Simulated response
-  authStore.login({ name: data.name, token: data.token })
-  router.push({ name: 'dashboard' })
-  dialog.value = false
+  // Reset errores
+  errors.email = ''
+  errors.password = ''
+  errors.global = ''
+
+  // Validación básica
+  if (!email.value) {
+    errors.email = 'Email requis'
+    return
+  }
+  if (!password.value) {
+    errors.password = 'Mot de passe requis'
+    return
+  }
+
+  loading.value = true
+  try {
+    await authStore.login(email.value, password.value)
+    router.push({ name: 'dashboard' })
+    dialog.value = false
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
+    errors.global = 'Email ou mot de passe incorrect'
+  } finally {
+    loading.value = false
+  }
 }
-
-const identification = ref('151391519506888521')
 </script>
-
 <style scoped>
 .content {
   display: flex;
@@ -114,7 +160,6 @@ const identification = ref('151391519506888521')
   margin-bottom: 6px;
   display: flex;
   align-items: center;
-  margin-top: 50px;
 }
 
 .continuer-btn {
