@@ -31,14 +31,14 @@ export interface IdentificationCard {
 }
 
 export interface HydraCollection<T> {
-  'hydra:member': T[]
-  'hydra:totalItems': number
+  member: T[]
+  totalItems: number
 }
 
 export const animalService = {
   async getAll(): Promise<Animal[]> {
-    const response = await api.get<any>('/animals')
-    return response.data['member'] ?? response.data['hydra:member'] ?? []
+    const response = await api.get<HydraCollection<Animal>>('/animals')
+    return response.data['member'] ?? []
   },
 
   async getOne(id: number): Promise<Animal> {
